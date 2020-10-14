@@ -126,4 +126,10 @@ STATIC_URL = '/static/'
 
 MODELS = os.path.join(BASE_DIR, 'api/models')
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'accounts.backends.BearerTokenAuthentication',
+    ),
+}
 
+AUTH_USER_MODEL = 'accounts.User'
