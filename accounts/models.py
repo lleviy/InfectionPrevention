@@ -1,112 +1,116 @@
 from django.core.validators import RegexValidator
 from django.db import models
-from django.contrib.auth.models import UserManager, User, AbstractUser
-from django.db.models.signals import post_save
+from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-import jwt
-
-from datetime import datetime
-from datetime import timedelta
-
-from django.conf import settings
 from django.db import models
 from django.core import validators
-from django.contrib.auth.models import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
-
-
 from django.contrib.auth.models import BaseUserManager
 
+from utils.geolocation import fetch_district
 
-# class UserManager(BaseUserManager):
-#     """
-#     Django требует, чтобы пользовательские `User`
-#     определяли свой собственный класс Manager.
-#     Унаследовав от BaseUserManager, мы получаем много кода,
-#     используемого Django для создания `User`.
-#
-#     Все, что нам нужно сделать, это переопределить функцию
-#     `create_user`, которую мы будем использовать
-#     для создания объектов `User`.
-#     """
-#
-#     def create_user(self, email, password, **extra_fields):
-#         if not email:
-#             raise ValueError(_('email is required'))
-#         email = self.normalize_email(email)
-#         user = self.model(email=email, **extra_fields)
-#         user.set_password(password)
-#         user.save(using=self._db)
-#         return user
-#
-#     def create_superuser(self, email, password, **extra_fields):
-#         extra_fields.setdefault('is_staff', True)
-#         extra_fields.setdefault('is_superuser', True)
-#         extra_fields.setdefault('is_active', True)
-#
-#         if extra_fields.get('is_staff') is not True:
-#             raise ValueError(('superuser must have is_staff=True.'))
-#         if extra_fields.get('is_superuser') is not True:
-#             raise ValueError(('superuser must have is_superuser=True.'))
-#         return self.create_user(email, password, **extra_fields)
-#
-#
+
+class UserManager(BaseUserManager):
+    """
+    Custom user model manager where email is the unique identifiers
+    for authentication instead of usernames.
+    """
+
+    def create_user(self, email, password, **extra_fields):
+        """
+        Create and save a User with the given email and password.
+        """
+        if not email:
+            raise ValueError('The Email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, email, password, **extra_fields):
+        """
+        Create and save a SuperUser with the given email and password.
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+        return self.create_user(email, password, **extra_fields)
+
+
 class User(AbstractUser):
-    # username = models.CharField(
-    #     ('username'),
-    #     max_length=150,
-    #     unique=True,
-    #     blank=True,
-    #     null=True,
-    #     help_text=('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-    #     error_messages={
-    #         'unique': ("A user with that username already exists."),
-    #     },
-    # )
+    username = models.CharField(max_length=10, blank=True)
     email = models.EmailField(
-        validators = [validators.validate_email],
+        validators=[validators.validate_email],
         unique=True,
         blank=False
-        )
-    # first_name = models.CharField(max_length=20, blank=True)
-    # last_name = models.CharField(max_length=20, blank=True)
-    # is_staff = models.BooleanField(default=False)
-    # is_active = models.BooleanField(default=True)
-    # Свойство `USERNAME_FIELD` сообщает нам, какое поле мы будем использовать для входа.
-    REQUIRED_FIELDS = ['email',]
-    # Сообщает Django, что класс UserManager, определенный выше,
-    # должен управлять объектами этого типа.
-    # objects = UserManager()
-    # def __str__(self):
-    #     """
-    #     Возвращает строковое представление этого `User`.
-    #     Эта строка используется, когда в консоли выводится `User`.
-    #     """
-    #     return self.email
+    )
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+    objects = UserManager()
+
+    def __str__(self):
+        return self.email
 
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     birth_date = models.DateField(blank=True, null=True)
     children = models.BooleanField(default=False)
-    # к этому полю подключить карты
-    location = models.CharField(max_length=100, blank=True)
+    address = models.CharField(max_length=100, blank=True)
+    district = models.CharField(max_length=50, blank=True)
+    okrug = models.CharField(max_length=100, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     recommendations = models.TextField(max_length=300, blank=True)
-    subscribed_to_newsletter = models.BooleanField(default=False)
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
-                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)  # validators should be a list
     first_name = models.CharField(max_length=20, blank=True)
     last_name = models.CharField(max_length=20, blank=True)
 
+    subscribed_to_newsletter = models.BooleanField(default=False)
+
+    NEWSLETTER_CHOICES = [
+        ('email', 'email'),
+        ('phone', 'phone'),
+        ('telegram', 'telegram'),
+    ]
+
+    newsletter_choice = models.CharField(
+        max_length=8,
+        choices=NEWSLETTER_CHOICES,
+        default='email',
+    )
+
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits "
+                                         "allowed.")
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)  # validators should be a list
+
+    telegram_id = models.CharField(max_length=30, blank=True)
+
     def __str__(self):
-        return self.user.username
+        return self.user.email
+
+    @property
+    def full_name(self):
+        if self.user.first_name:
+            return self.first_name + self.last_name
+        return self.user.email
 
     @receiver(post_save, sender=User)
     def create_profile(sender, instance, created, **kwargs):
         if created:
             UserProfile.objects.create(user=instance)
 
+
+# @receiver(pre_save, sender=UserProfile)
+def user_profile_pre_save(sender, instance, **kwargs):
+    if instance.address:
+        instance.district, instance.okrug = fetch_district(instance.address)
+
+
+pre_save.connect(user_profile_pre_save, sender=UserProfile)

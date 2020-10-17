@@ -37,6 +37,6 @@ class DistrictsView(APIView):
                     "60-100 years": 30,
                     "total": 630,
                 },
-                "recommendation": "Рекомендуется закрыть школы на карантин",
+                "recommendation": "Какая-то рекомендация",
                 }
         return JsonResponse(response)
