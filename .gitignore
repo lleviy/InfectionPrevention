@@ -1,5 +1,6 @@
 /testvenv/
 *.sqlite3
 .idea/*
-__pycache__/*
+**/__pycache__/*
 secrets.json
+**/migrations/

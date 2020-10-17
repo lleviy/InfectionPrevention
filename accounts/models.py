@@ -1,3 +1,4 @@
+
 from django.core.validators import RegexValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -8,7 +9,7 @@ from django.db import models
 from django.core import validators
 from django.contrib.auth.models import BaseUserManager
 
-from utils.geolocation import fetch_district
+from utils.geolocation import fetch_district, fetch_coordinates
 
 
 class UserManager(BaseUserManager):
@@ -65,6 +66,8 @@ class UserProfile(models.Model):
     address = models.CharField(max_length=100, blank=True)
     district = models.CharField(max_length=50, blank=True)
     okrug = models.CharField(max_length=100, blank=True)
+    lat = models.DecimalField(max_digits=15, decimal_places=13, null=True, blank=True)
+    lon = models.DecimalField(max_digits=15, decimal_places=13, null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     recommendations = models.TextField(max_length=300, blank=True)
@@ -74,9 +77,8 @@ class UserProfile(models.Model):
     subscribed_to_newsletter = models.BooleanField(default=False)
 
     NEWSLETTER_CHOICES = [
-        ('email', 'email'),
-        ('phone', 'phone'),
-        ('telegram', 'telegram'),
+        ('email', 'Электронная почта'),
+        ('phone', 'СМС'),
     ]
 
     newsletter_choice = models.CharField(
@@ -111,6 +113,7 @@ class UserProfile(models.Model):
 def user_profile_pre_save(sender, instance, **kwargs):
     if instance.address:
         instance.district, instance.okrug = fetch_district(instance.address)
+        instance.lat, instance.lon = fetch_coordinates(instance.address)
 
 
 pre_save.connect(user_profile_pre_save, sender=UserProfile)

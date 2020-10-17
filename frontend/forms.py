@@ -1,4 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.forms import DateInput
+
 from accounts.models import User, UserProfile
 from django import forms
 
@@ -15,4 +17,7 @@ class ProfileForm(forms.ModelForm):
         labels = {'first_name': 'Имя', 'last_name': 'Фамилия', 'birth_date': 'Дата рождения', 'address': 'Адрес',
                   'children': 'Наличие детей', 'subscribed_to_newsletter': 'Подписаться на рассылку?',
                   "newsletter_choice": 'Куда производить рассылку', "phone_number": 'Номер телефона'}
+        widgets = {
+            'date_birth': DateInput(attrs={'type': 'date'})
+        }
 

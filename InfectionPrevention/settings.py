@@ -149,3 +149,6 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'accounts.User'
 
 LOGOUT_REDIRECT_URL = ''
+
+EMAIL_HOST_PASSWORD = get_secret("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = 'infectionvirus331@gmail.com'
