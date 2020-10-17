@@ -1,5 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="map__wraper">
+    <div class="map__search">
+        <label for="site-search">Поиск по районам:</label>
+        <input type="search" id="site-search" name="q"
+            aria-label="Search through site content">
+
+        <button>Искать</button>
+        <table>
+            <tr>
+              <td>&nbsp;</td>
+              <td>Район</td>
+              <td>Заражения</td>
+              <td>Летальные случаи</td>
+            </tr>
+            <tr>
+              <td>Арбат</td>
+              <td>450</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>Басманный</td>
+              <td>331</td>
+              <td>5</td>
+            </tr>
+            <tr>
+              <td>Замоскворечье</td>
+              <td>230</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Красносельский</td>
+              <td>200</td>
+              <td>2</td>
+            </tr>
+          </table>
+    </div>
+     <!-- Создаём контейнер для карты -->
+    <div id="map" style="width: 600px; height: 400px;"></div>
+
+</div>               
 <p>{{districts}}</p>
 {% endblock content %}
