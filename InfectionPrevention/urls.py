@@ -22,5 +22,6 @@ urlpatterns = [
     path('api/', include('api.urls')),
 
     # path to our account's app endpoints
-    path("api/accounts/", include("accounts.urls"))
+    path("api/accounts/", include("accounts.urls")),
+    path("", include(("frontend.urls", 'frontend'), namespace='frontend')),
 ]

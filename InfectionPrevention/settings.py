@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'accounts',
     'djoser',
     'rest_framework.authtoken',
+    'frontend'
 ]
 
 MIDDLEWARE = [
@@ -75,7 +76,7 @@ ROOT_URLCONF = 'InfectionPrevention.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'frontend/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -146,3 +147,5 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'accounts.User'
+
+LOGOUT_REDIRECT_URL = ''

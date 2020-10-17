@@ -1,0 +1,104 @@
+[
+  {
+    "model": "api.okrug",
+    "pk": 1,
+    "fields": {
+      "name": "Восточный",
+      "short_name": "ВАО",
+      "city": ""
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 2,
+    "fields": {
+      "name": "Западный",
+      "short_name": "ЗАО",
+      "city": ""
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 3,
+    "fields": {
+      "name": "Зеленоградский",
+      "short_name": "ЗелАО",
+      "city": ""
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 4,
+    "fields": {
+      "name": "Новомосковский",
+      "short_name": "",
+      "city": ""
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 5,
+    "fields": {
+      "name": "Северный",
+      "short_name": "САО",
+      "city": ""
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 6,
+    "fields": {
+      "name": "Северо-Восточный",
+      "short_name": "СВАО",
+      "city": ""
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 7,
+    "fields": {
+      "name": "Северо-Западный",
+      "short_name": "СЗАО"
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 8,
+    "fields": {
+      "name": "Троицкий",
+      "short_name": ""
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 9,
+    "fields": {
+      "name": "Центральный",
+      "short_name": "ЦАО"
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 10,
+    "fields": {
+      "name": "Юго-Восточный",
+      "short_name": "ЮВАО"
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 11,
+    "fields": {
+      "name": "Юго-Западный",
+      "short_name": "ЮЗАО"
+    }
+  },
+  {
+    "model": "api.okrug",
+    "pk": 12,
+    "fields": {
+      "name": "Южный",
+      "short_name": "ЮАО"
+    }
+  }
+]
