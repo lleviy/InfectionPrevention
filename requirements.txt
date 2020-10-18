@@ -1,6 +1,7 @@
 amqp==5.0.1
 anyjson==0.3.3
 asgiref==3.2.10
+beautifulsoup4==4.9.3
 billiard==3.6.3.0
 celery==5.0.0
 certifi==2020.6.20
@@ -10,7 +11,10 @@ click-didyoumean==0.0.3
 click-repl==0.1.6
 cycler==0.10.0
 Django==3.1.2
+django-bootstrap==0.2.4
+django-bootstrap4==2.3.1
 django-chartit==0.2.9
+django-crispy-forms==1.9.2
 django-templated-mail==1.1.1
 djangorestframework==3.11.2
 djangorestframework-simplejwt==4.4.0
@@ -33,6 +37,7 @@ scikit-learn==0.23.2
 scipy==1.5.2
 six==1.15.0
 sklearn==0.0
+soupsieve==2.0.1
 sqlparse==0.4.1
 threadpoolctl==2.1.0
 urllib3==1.25.10

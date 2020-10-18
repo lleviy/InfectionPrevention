@@ -1,47 +1,73 @@
-<!DOCTYPE html>
-{% load static %}
+<!DOCTYPE html> {% load static %}
 <html>
-    <head>
-        <title>Infection Prevention</title>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    
-    <!-- Подключаем API -->
-    <!-- Подробнее https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/load-docpage/ -->
-    <script
-      src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-    ></script>
 
-    <script
-      //src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"
-      src="https://api-maps.yandex.ru/2.1/?apikey=cccb855e-57ee-42cd-9f39-d496d925f7a6&lang=ru_RU"
-      type="text/javascript"
-    ></script>
-    <script src="https://unpkg.com/osme"></script>
-    
-    </head>
-    <body>
-        <div class="app">
-            <div class="page-header">
-                <h1><a href="/">CoVid</a></h1>
-                <h4><a href="/">Карта Заражений</a></h4>
-                <h4><a href="/">Общие рекомендации</a></h4>
-                    {% if user.is_authenticated %}
-                <p>Вы вошли как {{ user.email }}!</p>
-                    <p><a href="{% url 'frontend:logout' %}">Log out</a></p>
-                    {% else %}
-                <a href="{% url 'frontend:login' %}">Log In</a>
-                    {% endif %}
-            </div>
-           
+<head>
+  <title>Infection Prevention</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+  <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+  <!-- Подключаем API -->
+  <!-- Подробнее https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/load-docpage/ -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script //src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" src="https://api-maps.yandex.ru/2.1/?apikey=cccb855e-57ee-42cd-9f39-d496d925f7a6&lang=ru_RU" type="text/javascript"></script>
+  <script src="https://unpkg.com/osme"></script>
+
+</head>
+
+<body>
+  {% block topbar_base %}
+  <header>
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="fa fa-bars"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'frontend:index' %}">CoVid</a>
         </div>
-        {% block content %}
-        {% endblock %}
+        <div class="collapse navbar-collapse navbar-responsive-collapse">
 
-        <!-- Создаём карту -->
-    <script src="{% static 'js/index.js' %}" type="text/javascript"></script>
+          <ul class="nav navbar-nav navbar-right">
+            {% if request.user.is_authenticated %}
+            <li><a href="{% url 'frontend:profile' %}">{{ request.user }}</a></li>
+            <li>
+              <a id="account_logout" href="{% url 'frontend:logout' %}"><i class="fa fa-power-off"></i> Выйти</a>
+            </li>
+          </ul>
+          </li>
+          {% else %}
+          <li><a href="{% url 'frontend:login' %}">Войти</a></li>
+          <li><a href="{% url 'frontend:signup' %}">Регистрация</a></li>
+          {% endif %}
+          </ul>
 
-    </body>
+          <form id="accountLogOutForm" style="display: none;" action="{% url 'frontend:logout' %}" method="POST">
+            {% csrf_token %}
+          </form>
+
+          <ul class="nav navbar-nav">
+            <li><a href="/">Карта заражений</a></li>
+            <li><a href="/">Общие рекомендации</a></li>
+        </div>
+      </div>
+  </header>
+  {% endblock %}
+
+  <div class="app">
+    <div class="page-header">
+    </div>
+
+    <div class="container-fluid">
+      {% block content %} {% endblock %}
+    </div>
+  </div>
+
+  <!-- Создаём карту -->
+  <script src="{% static 'js/index.js' %}" type="text/javascript"></script>
+
+</body>
+
 </html>

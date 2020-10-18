@@ -1,10 +1,18 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <h2>Войти</h2>
 <form method="post">
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Войти</button>
+  {{ form|crispy }}
+  <button type="submit" class="btn btn-primary">Войти</button>
+  <a href="/" class="btn btn-link">Забыли пароль?</a>
 </form>
 {% endblock content %}
+
+accounts/models.py
+frontend/templates/base.html
+frontend/templates/registration/login.html
+frontend/templates/registration/profile.html
+frontend/templates/registration/signup.html
