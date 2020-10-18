@@ -7,20 +7,41 @@
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
         <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    
+    <!-- Подключаем API -->
+    <!-- Подробнее https://tech.yandex.ru/maps/doc/jsapi/2.1/dg/concepts/load-docpage/ -->
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+    ></script>
+
+    <script
+      //src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"
+      src="https://api-maps.yandex.ru/2.1/?apikey=cccb855e-57ee-42cd-9f39-d496d925f7a6&lang=ru_RU"
+      type="text/javascript"
+    ></script>
+    <script src="https://unpkg.com/osme"></script>
+    
     </head>
     <body>
-        <div class="page-header">
-            <h1><a href="/">Infection Prevention</a></h1>
-                  {% if user.is_authenticated %}
-        <p>Вы вошли как {{ user.email }}!</p>
-            <p><a href="{% url 'frontend:logout' %}">Log out</a></p>
-      {% else %}
-        <p>You are not logged in.</p>
-        <a href="{% url 'frontend:login' %}">Log In</a>
-            {% endif %}
+        <div class="app">
+            <div class="page-header">
+                <h1><a href="/">CoVid</a></h1>
+                <h4><a href="/">Карта Заражений</a></h4>
+                <h4><a href="/">Общие рекомендации</a></h4>
+                    {% if user.is_authenticated %}
+                <p>Вы вошли как {{ user.email }}!</p>
+                    <p><a href="{% url 'frontend:logout' %}">Log out</a></p>
+                    {% else %}
+                <a href="{% url 'frontend:login' %}">Log In</a>
+                    {% endif %}
+            </div>
+           
         </div>
-
         {% block content %}
         {% endblock %}
+
+        <!-- Создаём карту -->
+    <script src="{% static 'js/index.js' %}" type="text/javascript"></script>
+
     </body>
 </html>
